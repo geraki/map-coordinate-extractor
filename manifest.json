@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Map Coordinate Extractor",
+  "version": "1.0",
+  "description": "Extract coordinates from map URLs and open them in different map services",
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://maps.google.com/*",
+    "*://www.google.com/maps/*",
+    "*://www.openstreetmap.org/*",
+    "*://www.bing.com/maps/*",
+    "*://www.mapillary.com/*"
+  ],
+  "action": {
+    "default_popup": "",
+    "default_title": "Map Coordinate Extractor"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://maps.google.com/*",
+        "*://www.google.com/maps/*",
+        "*://www.openstreetmap.org/*",
+        "*://www.bing.com/maps/*",
+        "*://www.mapillary.com/*"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
