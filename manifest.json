@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Map Coordinate Extractor",
-  "version": "1.1",
+  "name": "Map Jumper",
+  "version": "1.2",
   "description": "Extract coordinates from map URLs and open them in different map services",
   "permissions": [
     "activeTab",
@@ -13,11 +13,13 @@
     "*://maps.ktimatologio.gr/*",
     "*://www.openstreetmap.org/*",
     "*://www.bing.com/maps/*",
-    "*://www.mapillary.com/*"
+    "*://www.mapillary.com/*",
+    "*://wikishootme.toolforge.org/*",
+    "*://osmand.net/*"
   ],
   "action": {
     "default_popup": "",
-    "default_title": "Map Coordinate Extractor"
+    "default_title": "Maps Jumper"
   },
   "background": {
     "service_worker": "background.js"
@@ -30,7 +32,9 @@
         "*://maps.ktimatologio.gr/*",
         "*://www.openstreetmap.org/*",
         "*://www.bing.com/maps/*",
-        "*://www.mapillary.com/*"
+        "*://www.mapillary.com/*",
+        "*://wikishootme.toolforge.org/*",
+        "*://osmand.net/*"
       ],
       "js": ["content.js"]
     }
