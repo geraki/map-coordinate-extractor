@@ -7,7 +7,9 @@ const mapServicePatterns = [
     /^https?:\/\/maps\.ktimatologio\.gr\//,
     /^https?:\/\/www\.openstreetmap\.org\//,
     /^https?:\/\/www\.bing\.com\/maps\//,
-    /^https?:\/\/www\.mapillary\.com\//
+    /^https?:\/\/www\.mapillary\.com\//,
+    /^https?:\/\/wikishootme\.toolforge\.org\//,
+    /^https?:\/\/osmand\.net\//
 ];
 
 function isMapServiceUrl(url) {

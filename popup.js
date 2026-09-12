@@ -100,8 +100,59 @@ const mapServices = {
             
             return null;
         }
-    }
-    ,
+    },
+    wikishootme: {
+        name: 'Wikishootme',
+        icon: 'wikishootme',
+        urlTemplate: (lat, lng, zoom) => `https://wikishootme.toolforge.org/#lat=${lat}&lng=${lng}&zoom=${zoom}`,
+        extractCoords: (url) => {
+            console.log('Checking Wikishootme patterns in:', url);
+            // Wikishootme uses fragment coords like #lat=...&lng=...&zoom=...
+            const hashMatch = url.match(/#.*(?:lat|latitude)=(-?\d+\.?\d*)[&;](?:lng|lon|longitude)=(-?\d+\.?\d*)(?:[&;]zoom=([0-9.]+))?/i);
+            if (hashMatch) {
+                const zoom = hashMatch[3] ? parseFloat(hashMatch[3]) : undefined;
+                console.log('Found Wikishootme hash pattern:', hashMatch, 'zoom:', zoom);
+                return { lat: parseFloat(hashMatch[1]), lng: parseFloat(hashMatch[2]), zoom };
+            }
+
+            const queryMatch = url.match(/[?&](?:lat|latitude)=(-?\d+\.?\d*)[&;](?:lng|lon|longitude)=(-?\d+\.?\d*)(?:[&;]zoom=([0-9.]+))?/i);
+            if (queryMatch) {
+                const zoom = queryMatch[3] ? parseFloat(queryMatch[3]) : undefined;
+                console.log('Found Wikishootme query pattern:', queryMatch, 'zoom:', zoom);
+                return { lat: parseFloat(queryMatch[1]), lng: parseFloat(queryMatch[2]), zoom };
+            }
+
+            return null;
+        }
+    },
+    osmand: {
+        name: 'OsmAnd',
+        icon: 'osmand',
+        urlTemplate: (lat, lng, zoom) => `https://osmand.net/map/#${zoom}/${lat}/${lng}`,
+        extractCoords: (url) => {
+            console.log('Checking OsmAnd patterns in:', url);
+
+            const hashMatch = url.match(/#([0-9]+(?:\.[0-9]+)?)\/(-?\d+\.?\d+)\/(-?\d+\.?\d+)/);
+            if (hashMatch) {
+                console.log('Found OsmAnd hash pattern:', hashMatch);
+                return { zoom: parseFloat(hashMatch[1]), lat: parseFloat(hashMatch[2]), lng: parseFloat(hashMatch[3]) };
+            }
+
+            const pinMatch = url.match(/[?&]pin=\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)/i);
+            if (pinMatch) {
+                console.log('Found OsmAnd pin pattern:', pinMatch);
+                return { lat: parseFloat(pinMatch[1]), lng: parseFloat(pinMatch[2]) };
+            }
+
+            const legacyMatch = url.match(/(?:\/|#)([0-9]+(?:\.[0-9]+)?)\/(-?\d+\.?\d+)\/(-?\d+\.?\d+)/);
+            if (legacyMatch) {
+                console.log('Found OsmAnd legacy pattern:', legacyMatch);
+                return { zoom: parseFloat(legacyMatch[1]), lat: parseFloat(legacyMatch[2]), lng: parseFloat(legacyMatch[3]) };
+            }
+
+            return null;
+        }
+    },
     ktimatologio: {
         name: 'Ktimatologio',
         icon: 'ktimatologio',
@@ -190,6 +241,8 @@ function detectCurrentMapService(url) {
     if (url.includes('openstreetmap.org')) return 'osm';
     if (url.includes('bing.com/maps')) return 'bing';
     if (url.includes('mapillary.com')) return 'mapillary';
+    if (url.includes('wikishootme.toolforge.org')) return 'wikishootme';
+    if (url.includes('osmand.net')) return 'osmand';
     if (url.includes('maps.ktimatologio.gr') || url.includes('ktimatologio.gr')) return 'ktimatologio';
     return null;
 }
